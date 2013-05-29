@@ -1,36 +1,35 @@
 package com.phonegap.munnadroid.plugin;
 
-import org.apache.cordova.api.CordovaInterface;
-import org.apache.cordova.api.LegacyContext;
-import org.apache.cordova.api.PluginResult;
-import org.apache.cordova.api.PluginResult.Status;
+import org.apache.cordova.api.CallbackContext;
+import org.apache.cordova.api.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
-import com.phonegap.api.Plugin;
 import android.widget.Toast;
 
-public class ToastPlugin extends Plugin {
+public class ToastPlugin extends CordovaPlugin {
 
 	@Override 
-	public PluginResult execute(String action, JSONArray data, String callback) {
+	public boolean execute(String action, JSONArray data, CallbackContext callback) {
 		
 		int tmpDuration;
-		String tmpText = "none";f
+		String tmpText = "none";
 		
 		try {
 			tmpText = data.getString(0);
 		} catch (JSONException e) {
-			return new PluginResult(Status.ERROR, "Parsing Text Exception");
+			callback.error("Parsing Text Exception");
+			return false;
 		} 
 		try {
 			tmpDuration = data.getInt(1);
 		} catch (JSONException e) {
-			return new PluginResult(Status.ERROR, "Parsing Duration Exception");
+			callback.error("Parsing Duration Exception");
+			return false;
 		}
 		
 		final String Text = tmpText;
 		final int Duration = tmpDuration;
-		final CordovaInterface currentCtx = ctx;
+		//final CordovaInterface currentCtx = cordova;
 		 
 		
 		Runnable runnable = new Runnable() { 
@@ -41,7 +40,7 @@ public class ToastPlugin extends Plugin {
 		
 		cordova.getActivity().runOnUiThread(runnable);
 		
-		return new PluginResult(Status.OK);
+		return true;
 	}
 
 }
